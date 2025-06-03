@@ -23,7 +23,7 @@ jobs:
 
           for file in update_docs/*; do
             echo "Processing $file"
-            sed -i -E 's|xref:Connector_help_([^)]*)\)|https://mydomain/connector/doc/\1.html)|g' "$file"
+            sed -E 's|xref:Connector_help_([^)]*)\)|https://mydomain/connector/doc/\1.html)|g' "$file"
             sed -i 's~\~/connector/images/~https://mydomain/api/public-catalog/v2-0/catalogs/images/~g' "$file"
           done
 
