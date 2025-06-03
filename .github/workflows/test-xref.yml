@@ -1,0 +1,31 @@
+name: Test Markdown Rewrite
+
+on:
+  push:
+    paths:
+      - 'update_docs/**'
+
+jobs:
+  rewrite-docs:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repo
+        uses: actions/checkout@v3
+
+      - name: Simulate changed-markdown-files
+        run: echo "any_changed=true" >> $GITHUB_ENV
+
+      - name: Rewrite links and log output
+        if: env.any_changed == 'true'
+        run: |
+          echo "Before:"
+          cat update_docs/sample.md
+
+          for file in update_docs/*; do
+            echo "Processing $file"
+            sed -i -E 's|xref:Connector_help_([^)]*)\)|https://mydomain/connector/doc/\1.html)|g' "$file"
+            sed -i 's~\~/connector/images/~https://mydomain/api/public-catalog/v2-0/catalogs/images/~g' "$file"
+          done
+
+          echo "After:"
+          cat update_docs/sample.md
